@@ -15,17 +15,15 @@ abstract: |
   R package TOAST (TOols for the Analysis of 
   heterogeneouS Tissues). It is designed for 
   the analyses of high-throughput data from 
-  heterogeneous tissues,
-  which is a mixture of different cell types.  
+  heterogeneous tissues
+  that are mixtures of different cell types.  
   TOAST offers functions for detecting cell-type 
   specific differential expression (csDE) or 
-  differential methylation (csDM) for microarray data,
-  and improving reference-free deconvolution 
+  differential methylation (csDM),
+  as well as improving reference-free deconvolution 
   based on cross-cell type differential analysis. 
-  TOAST implements a rigorous staitstical framework, 
-  based on linear model, which provides great 
-  flexibility for csDE/csDM detection and 
-  superior computationl performance. 
+  TOAST is based on rigorous staitstical framework, 
+  and provides great flexibility and superior computationl performance. 
 vignette: |
   %\VignetteIndexEntry{Analyses of high-throughput data from heterogeneous samples with TOAST}
   %\VignetteEngine{knitr::rmarkdown}
@@ -49,56 +47,53 @@ or brain tissue, are mixtures of a number of different
 cell types.  The sample mixing complicates data analysis
 because the experimental data from the high-throughput 
 experiments are weighted average of signals from multiple
-cell types.  
-For these data, traditional analysis methods that ignores
+cell types. For these data, traditional analysis methods that ignores
 the cell mixture 
-will lead to results with low resolution, even biased or
-errorneous results. 
-For example, it has been discovered in epigenome-wide 
-association studies (EWAS) that the mixing proportions 
-can confound with the experimental factor of 
+will lead to results with low resolution,  biased, or
+even errorneous results. 
+For example, it has been discovered that in epigenome-wide 
+association studies (EWAS), the mixing proportions 
+can be confounded with the experimental factor of 
 interest (such as age). Ignoring the cell mixing 
 will lead to  false positives. 
 On the other hand, cell type specific changes 
-under different clinical conditions could be associated
-with disease pathogenesis and progressions, and are of
+under different conditions could be associated
+with disease pathogenesis and progressions, which are of
 great interests to researchers.
 
 For heterogeneous samples, it is possible to profile the
-cell types through experimental techniques.
+pure cell types through experimental techniques.
 They are, however, laborious and expensive that cannot
-be applied to large scale studies.  
-Computational tools for analzying the mixed data are
-available for proportion estimation and cell type 
+be applied to large scale studies.
+Computational tools for analzying the mixed data have been developed 
+for proportion estimation and cell type 
 specific signal detection. 
 <!-- deconvolution of signals and detection of signals.  -->
 <!-- Without the experimental tools,  -->
-There are a number of fundamental questions 
-in the analyses: 
+There are two fundamental questions in this type of analyses: 
 <!-- that are  for conducting in-silico 
 deconvolution of signals and detection of signals.  -->
 
-* First, how to estimate mixing proportions?  
+1. How to estimate mixing proportions?  
 
-     + There are a number of existing methods 
-     that are devoted to solve this question.  
-     These methods mainly can be categorized 
-     to two groups: reference-based (require
-     pure cell type profiles) and reference-free
-     (does not require pure cell type profiles).  
-     + It has been found that reference-based 
-     deconvolution is more accurate and reliable
-     than reference-free deconvolution.  
-     + However, the reference panels required 
-     for reference-based deconvolution can be 
-     difficult to obtain.  
+There are a number of existing methods 
+devoted to solve this question. These methods mainly can be categorized 
+to two groups: **reference-based** (require
+pure cell type profiles) and **reference-free**
+(does not require pure cell type profiles).
+It has been found that reference-based 
+deconvolution is more accurate and reliable
+than reference-free deconvolution. 
+However, the reference panels required 
+for reference-based deconvolution can be 
+difficult to obtain, thus reference-free method has wider application. 
+
 <!-- * As subsequence of the first question, we ask,
 how to construct reference panels from available 
 single-cell studies if reference-based deconvolution
 is used?   -->
-* If reference-free deconvolution is used, 
-how to improve estimation accuracy? 
-* Lastly, with available mixing proportions, 
+
+2. with available mixing proportions, 
 how to detect cell-type specific DE/DM?
 
 TOAST is a package designed to answer these 
@@ -108,7 +103,7 @@ tissues.  Currently TOAST provides functions
 to detect cell-type specific DE/DM, as well 
 as differences across different cell types. 
 TOAST also has functions to improve the 
-accuracy of reference-free deconvolutions.
+accuracy of reference-free deconvolutions through better feature selection.
 
 <!-- In future works, we plan to add more 
 components and expand our answers to the above questions.   -->
@@ -138,7 +133,7 @@ code chunk assumes you have an expression
 or DNA methylation matrix called `Y_raw`,
 a data frame of sample information called
 `design`, and a table of cellular composition
-information (i.e. mixing proportions) 
+(i.e. mixing proportions) 
 called `prop`. If the cellular composition
 is not available, the following sections 
 will discuss about how to obtain mixing 
@@ -212,9 +207,8 @@ If you have mixing proportions available,
 you can directly go to Section \@ref(section:csDE).
 
 In many situations, mixing proportions 
-are not readily available.  
-There are a number of deconvolution methods
-available to solve this problem.  To name a few:
+are not readily available. There are a number of deconvolution methods
+available to solve this problem. To name a few:
 
 * For DNA methylation: `r CRANpkg("RefFreeEWAS")`
 (Houseman et al. 2016) is reference-free,  
@@ -239,11 +233,11 @@ representation of reference-based methods.
 
 We also provide function to improve reference-free
 deconvolution performance in Section \@ref(section:ImpRF).
-Note that in the following example we have only 
-3000 features in the Y_raw dataset. Real 450K dataset should 
+Note that in the following example, we have only 
+3000 features in the Y_raw dataset, thus the proportion estimation 
+is not very accurate. Real 450K dataset should 
 have around 485,000 features. More features generally
-lead to more improvements, as feature selection 
-become more important.
+lead to better estimation, because there are more information in the data. 
 
 
 ## Reference-based deconvolution using least square method {#section:RB}
@@ -272,21 +266,23 @@ outT <- epidish(beta.m = Y, ref.m = Ref, method = "RPC")
 estProp_RB <- outT$estF
 ```
 
-* **A word about Step 1** 
+_**A word about Step 1**_ 
 
 For step 1, one can also use `findRefinx_cv()` 
 to select features based on coefficient of variantion. 
 The choice of `findRefinx_var()` and `findRefinx_cv()`
-depends on whether the feature variance of your data
-highly correlated with feature mean. In gene expression
-(microarray or RNA-seq) data, gene variance is highly
-correlated with mean, thus `findRefinx_cv()` is recommended.
-In DNA methylation data, this correlation is not 
-strong, both `findRefinx_cv()` and `findRefinx_var()`
-can be used. But we recommend `findRefinx_var()` 
-for this situation since we find `findRefinx_var()`
+depends on whether the feature variances of your data
+correlates with the means. 
+For RNA-seq counts, the variance-mean correlation is strong, 
+thus `findRefinx_cv()` is recommended.
+For log-counts, the variance-mean correlation 
+largely disappears, so both `findRefinx_cv()` and `findRefinx_var()`
+would work similarly. In DNA methylation data, this correlation is not 
+strong, either `findRefinx_cv()` or `findRefinx_var()`
+can be used. In this case,  
+we recommend `findRefinx_var()` because we find it
 has better feature selection for DNA methylation 
-data than `findRefinx_cv()`(unpublished results).
+data than `findRefinx_cv()` (unpublished results).
 ```{r, DB3}
 refinx = findRefinx_cv(Y_raw, nmarker=1000)
 ```
@@ -379,7 +375,7 @@ mean(diag(cor(estProp_RF_improved, estProp_RB)))
 ```
 
 
-* **A word about Step 2** 
+__***A word about Step 2***__
 
 For step 2, initial features (instead of automatic
 selection by largest variation) can be provided to
@@ -426,7 +422,7 @@ subjects.
 
 We demonstrate the usage of TOAST in three common settings.
 
-## Detect cell type-specific differential signals from the basic two group-designed experiment {#section:csDEbasic}
+## Detect cell type-specific differential signals under two-group comparison {#section:csDEbasic}
 
 1. First load in the library and the dataset.
 
@@ -437,7 +433,7 @@ data("RA_100samples")
 
 2. Generate the study design based on the 
 phenotype matrix. Note that all the binary 
-variable (e.g. disease = 0, 1) or categorical
+(e.g. disease = 0, 1) or categorical
 variable (e.g. gender = 1, 2) should be transformed
 to factor class. Here we use the proportions 
 estimated from step \@ref(section:RFimp) as
@@ -472,7 +468,7 @@ fitted_model$all_coefs
 TOAST allows a number of hypotheses to be 
 tested using `csTest()` in two group setting.
 
-### Testing parameter effect (e.g. disease) in one cell type.
+### Testing one parameter (e.g. disease) in one cell type.
 
 For example, testing disease (patient versus controls) 
 effect in Gran.
@@ -485,10 +481,9 @@ head(res_table, 3)
 Disease_Gran_res <- res_table
 ```
 
-### Testing parameter effect in all cell types.
+### Testing one parameter in all cell types.
 
-For example, testing the joint effect of age 
-in all cell types:
+For example, testing the joint effect of age in all cell types:
 
 ```{r, eval = FALSE}
 res_table <- csTest(fitted_model, 
@@ -510,7 +505,7 @@ lapply(res_table, head, 3)
 res_table <- csTest(fitted_model, coef = "disease")
 ```
 
-## Detect cell type-specific differential signals from the general experimental design
+## Detect cell type-specific differential signals from a general experimental design
 
 1. First load in the library and the dataset.
 
@@ -554,7 +549,7 @@ fitted_model$all_coefs
 TOAST allows a number of hypotheses to be 
 tested using `csTest()` in two group setting.
 
-### Testing the effect of single parameter in one cell type.
+### Testing one parameter in one cell type
 
 For example, testing age effect in Gran.
 
