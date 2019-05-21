@@ -1,3 +1,0 @@
-# ssPCA
-# ssPCA
-# BIOS560R-2019
