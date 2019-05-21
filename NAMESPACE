@@ -1,0 +1,13 @@
+import( stats )
+import( RefFreeEWAS )
+import( EpiDISH )
+export(
+    assignCellType,
+    csDeconv,
+    csTest,
+    DEVarSelect,
+    findRefinx_cv,
+    findRefinx_var,
+    fitModel,
+    makeDesign
+)
