@@ -1,14 +1,14 @@
 Package: TOAST
 Type: Package
 Title: Tools for the analysis of heterogeneous tissues
-Version: 0.99.1
+Version: 0.99.2
 Description: This package is devoted to analyzing high-throughput data (e.g. gene expression microarray, DNA methylation microarray, RNA-seq) from complex tissues. Current functionalities include 1. detect cell-type specific or cross-cell type differential signals  2. improve variable selection in reference-free deconvolution.
 Author: Ziyi Li and Hao Wu
 Maintainer: Ziyi Li <ziyi.li@emory.edu>
 License: GPL-2
 Encoding: UTF-8
 LazyData: false
-Depends: R (>= 3.5), RefFreeEWAS, EpiDISH
+Depends: R (>= 3.6), RefFreeEWAS, EpiDISH
 biocViews: DNAMethylation, GeneExpression, DifferentialExpression, DifferentialMethylation, Microarray, GeneTarget
 BugReports: https://github.com/ziyili20/TOAST/issues
 Imports: stats
