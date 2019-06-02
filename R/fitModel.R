@@ -4,6 +4,17 @@ fitModel <- function(Design_out, Y) {
     # Y is a G*N matrix,
     #     G is the number of features, N is the number of subjects
 
+    if (is(Y, "SummarizedExperiment")) {
+         se <- Y
+         Y <- assays(se)$counts
+    } else if (!is(Y, "matrix")) {
+         stop("Y should be a matrix or a SummarizedExperiment object!")
+    }
+
+    if (nrow(Y) < ncol(Y)) {
+         stop("Y should have dimension P (features) by N (samples)!")
+    }
+
     N <- ncol(Y)
     Y <- t(Y)
     W <- Design_out$design_matrix

@@ -6,7 +6,7 @@ GetCMatrix_CTOne_CoefTwo <- function(coef,
                               verbose) {
 
     if (verbose) {
-        cat("Test the differences of ", cell_type[1], " vs. ",
+        message("Test the differences of ", cell_type[1], " vs. ",
             cell_type[2], " in ", coef[1], ":", coef[2], ". \n", sep = "")
     }
     to_test1 <- paste0(cell_type[1], ":", coef[1], coef[2])

@@ -7,7 +7,7 @@ author:
 - name: Hao Wu
   affiliation: Department of Biostatistics and Bioinformatics, Emory University, Atlanta, GA 30322
   email: hao.wu@emory.edu
-package: TOAST 0.99.1
+package: TOAST 0.99.4
 output:
   BiocStyle::html_document
 abstract: |
@@ -112,11 +112,13 @@ components and expand our answers to the above questions.   -->
 # Installation and quick start
 
 ## Install TOAST
-Install the TOAST package by
+To install this package, start R (version "3.6") and enter:
 
-```{r install, eval=FALSE}
-library(devtools)
-install_github("ziyili20/TOAST", build_vignettes=TRUE)
+```{r install, eval = FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("TOAST") 
 ```
 
 ## How to get help for TOAST
@@ -134,7 +136,9 @@ or DNA methylation matrix called `Y_raw`,
 a data frame of sample information called
 `design`, and a table of cellular composition
 (i.e. mixing proportions) 
-called `prop`. If the cellular composition
+called `prop`. Instead of a data matrix, 
+`Y_raw` could also be a `SummarizedExperiment` object. 
+If the cellular composition
 is not available, the following sections 
 will discuss about how to obtain mixing 
 proportions using reference-free deconvolution 
@@ -154,7 +158,7 @@ head(res_table)
 
 
 
-# Example datset
+# Example dataset
 
 TOAST provides an example dataset of 450K 
 DNA methylation. The following sections will
@@ -226,7 +230,7 @@ methods and is a good resource to look up.
 
 Here we demonstrate two ways to estimate 
 mixing proportions, one using 
-`r CRANpkg("RefFreeEWAS")`, representing the
+`r CRANpkg("RefFreeEWAS")` (Houseman et al. 2016), representing the
 class of reference-free methods, and the other
 using `r Biocpkg("EpiDISH")` (Teschendorff et al. 2017) as a 
 representation of reference-based methods. 
@@ -243,12 +247,15 @@ lead to better estimation, because there are more information in the data.
 ## Reference-based deconvolution using least square method {#section:RB}
 
 1. Select the top 1000 most variant 
-features by `findRefinx_var()`. 
+features by `findRefinx()`. 
 To select the top features with 
 largest coefficients of variations, 
-one can use `findRefinx_cv()`.
+one can use `findRefinx(..., sortBy = "cv")`.
+Default `sortBy` argument is `"var"`. Here, instead of 
+a data matrix, `Y_raw` could 
+also be a `SummarizedExperiment` object. 
 ```{r SelFeature}
-refinx <- findRefinx_var(Y_raw, nmarker = 1000)
+refinx <- findRefinx(Y_raw, nmarker = 1000)
 ```
 
 2. Subset data and reference panel.
@@ -268,23 +275,22 @@ estProp_RB <- outT$estF
 
 _**A word about Step 1**_ 
 
-For step 1, one can also use `findRefinx_cv()` 
+For step 1, one can also use `findRefinx(..., sortBy = "cv")` 
 to select features based on coefficient of variantion. 
-The choice of `findRefinx_var()` and `findRefinx_cv()`
+The choice of `sortby = "cv"` and `sortBy = "var"`
 depends on whether the feature variances of your data
 correlates with the means. 
 For RNA-seq counts, the variance-mean correlation is strong, 
-thus `findRefinx_cv()` is recommended.
+thus `sortBy = "cv"` is recommended.
 For log-counts, the variance-mean correlation 
-largely disappears, so both `findRefinx_cv()` and `findRefinx_var()`
+largely disappears, so both `sortBy = "cv"` and `sortBy = "var"`
 would work similarly. In DNA methylation data, this correlation is not 
-strong, either `findRefinx_cv()` or `findRefinx_var()`
-can be used. In this case,  
-we recommend `findRefinx_var()` because we find it
+strong, either `sortBy = "cv"` or `sortBy = "var"`
+can be used. In this case, we recommend `sortBy = "var"` because we find it
 has better feature selection for DNA methylation 
-data than `findRefinx_cv()` (unpublished results).
+data than `sortBy = "cv"` (unpublished results).
 ```{r, DB3}
-refinx = findRefinx_cv(Y_raw, nmarker=1000)
+refinx = findRefinx(Y_raw, nmarker=1000, sortBy = "var")
 ```
 
 
@@ -298,9 +304,9 @@ library(RefFreeEWAS)
 
 2. Similar to Reference-based deconvolution 
 we also select the top 1000 most variant 
-features by `findRefinx_var()`. And then subset data.
+features by `findRefinx()`. And then subset data.
 ```{r DF2}
-refinx <- findRefinx_var(Y_raw, nmarker = 1000)
+refinx <- findRefinx(Y_raw, nmarker = 1000)
 Y <- Y_raw[refinx,]
 ```
 
@@ -328,8 +334,8 @@ mean(diag(cor(estProp_RF, estProp_RB)))
 Feature selection is an important step 
 before RF deconvolution and is directly
 related with the estimation quality of 
-cell composition.  `findRefinx.cv()` and
-`findRefinx.var()` simply select the markers
+cell composition.  `findRefinx()` and
+`findRefinx(..., sortBy = "var")` simply select the markers
 with largest CV or largest variance, 
 which may not always result in a good 
 selection of markers.  Here, we propose
@@ -358,6 +364,9 @@ library(TOAST)
 improved-RF implemented with RefFreeCellMix. 
 The default deconvolution function implemented
 in `csDeconv()` is `RefFreeCellMix_wrapper()`.
+Here, instead of 
+a data matrix, `Y_raw` could 
+also be a `SummarizedExperiment` object.
 
 ```{r IRB-RFCM2, results='hide', message=FALSE, warning=FALSE}
 K=6
@@ -382,7 +391,7 @@ selection by largest variation) can be provided to
 function `RefFreeCellMixT()`. For example
 
 ```{r initFeature, eval = FALSE}
-refinx <- findRefinx_cv(Y_raw, nmarker = 1000)
+refinx <- findRefinx(Y_raw, nmarker = 1000, sortBy = "cv")
 InitNames <- rownames(Y_raw)[refinx]
 csDeconv(Y_raw, K = 6, nMarker = 1000, 
          InitMarker = InitNames, TotalIter = 30)
@@ -400,6 +409,17 @@ used similarly.
 
 ```{r, eval = FALSE}
 mydeconv <- function(Y, K){
+     if (is(Y, "SummarizedExperiment")) {
+          se <- Y
+          Y <- assays(se)$counts
+     } else if (!is(Y, "matrix")) {
+          stop("Y should be a matrix
+               or a SummarizedExperiment object!")
+     }
+     
+     if (K<0 | K>ncol(Y)) {
+         stop("K should be between 0 and N (samples)!")
+     }
      outY = RefFreeEWAS::RefFreeCellMix(Y, 
                mu0=RefFreeEWAS::RefFreeCellMixInitialize(Y, 
                K = K))
@@ -424,14 +444,8 @@ We demonstrate the usage of TOAST in three common settings.
 
 ## Detect cell type-specific differential signals under two-group comparison {#section:csDEbasic}
 
-1. First load in the library and the dataset.
-
-```{r csDE1}
-library(TOAST)
-data("RA_100samples")
-```
-
-2. Generate the study design based on the 
+1. Assuming you have TOAST library and dataset loaded, 
+the first step is to generate the study design based on the 
 phenotype matrix. Note that all the binary 
 (e.g. disease = 0, 1) or categorical
 variable (e.g. gender = 1, 2) should be transformed
@@ -449,14 +463,18 @@ colnames(Prop) <- colnames(Ref)
 
 ```
 
-3. Make model design using the design (phenotype)
+2. Make model design using the design (phenotype)
 data frame and proportion matrix. 
 ```{r csDE3}
 Design_out <- makeDesign(design, Prop)
 ```
 
-4. Fit linear models for raw data and the 
-design generated from `Design_out()`.
+3. Fit linear models for raw data and the 
+design generated from `Design_out()`. `Y_raw` 
+here is a data matrix with dimension P (features) 
+by N (samples). Instead of 
+a data matrix, `Y_raw` could 
+also be a `SummarizedExperiment` object. 
 ```{r csDE4}
 fitted_model <- fitModel(Design_out, Y_raw)
 # print all the cell type names
@@ -507,14 +525,8 @@ res_table <- csTest(fitted_model, coef = "disease")
 
 ## Detect cell type-specific differential signals from a general experimental design
 
-1. First load in the library and the dataset.
-
-```{r general1}
-library(TOAST)
-data("RA_100samples")
-```
-
-2. Generate the study design based on the phenotype
+1. Assuming you have TOAST library and dataset loaded,
+generate the study design based on the phenotype
 matrix. Note that all the binary variable 
 (e.g. disease = 0, 1) or categorical variable 
 (e.g. gender = 1, 2) should be transformed 
@@ -530,13 +542,13 @@ colnames(Prop) <- colnames(Ref)
 ## columns of proportion matrix should have names
 ```
 
-3. Make model design using the design (phenotype)
+2. Make model design using the design (phenotype)
 data frame and proportion matrix. 
 ```{r general3}
 Design_out <- makeDesign(design, Prop)
 ```
 
-4. Fit linear models for raw data and the 
+3. Fit linear models for raw data and the 
 design generated from `Design_out()`.
 ```{r general4}
 fitted_model <- fitModel(Design_out, Y_raw)
@@ -609,14 +621,8 @@ res_table <- csTest(fitted_model,
 
 ## Detect cross-cell type differential signals
 
-1. First load in the library and the dataset.
-
-```{r crossCellType1, eval = FALSE}
-library(TOAST)
-data("RA_100samples")
-```
-
-2. Generate the study design based on the 
+1. Assuming you have TOAST library and dataset loaded,
+first step is to generate the study design based on the 
 phenotype matrix. We allow general design
 matrix such as the following:
 ```{r crossCellType2}
@@ -635,13 +641,13 @@ In this case, the design matrix can be specified as:
 design <- data.frame(disease = as.factor(rep(0,100)))
 ```
 
-3. Make model design using the design (phenotype) 
+2. Make model design using the design (phenotype) 
 data frame and proportion matrix. 
 ```{r crossCellType4}
 Design_out <- makeDesign(design, Prop)
 ```
 
-4. Fit linear models for raw data and the 
+3. Fit linear models for raw data and the 
 design generated from `Design_out()`.
 ```{r crossCellType5}
 fitted_model <- fitModel(Design_out, Y_raw)

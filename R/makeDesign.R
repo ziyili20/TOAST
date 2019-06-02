@@ -7,14 +7,14 @@ makeDesign <- function(design, Prop) {
 
     if (!is.vector(Prop)) {
         K <- ncol(Prop)
-        
+
         if (is.null(colnames(Prop))) {
             colnames(Prop) <- paste0("celltype", seq_len(K))
         }
     } else {
-        K = 1
+        K <- 1
     }
-    
+
     dd <- cbind(Prop, design)
 
     ## make a formula
@@ -33,9 +33,9 @@ makeDesign <- function(design, Prop) {
 
     ## remove columns that are all zero
     design_matrix <- design_matrix[,!colSums(design_matrix==0) == nrow(Prop)]
-    
+
     design_matrix <- unique(design_matrix, MARGIN = 2)
-    
+
     formul <- paste0("~ ", paste(colnames(design_matrix), sep="+", collapse = "+"))
 
     return(list(design_matrix = design_matrix,

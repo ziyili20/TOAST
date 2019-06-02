@@ -1,7 +1,21 @@
 DEVarSelect <- function(Y_raw, Prop0, nMarker = 1000){
 
-    K <- dim(Prop0)[2]
-    N_sample <- dim(Prop0)[1]
+    if (is(Y_raw, "SummarizedExperiment")) {
+         se <- Y_raw
+         Y_raw <- assays(se)$counts
+    } else if (!is(Y_raw, "matrix")) {
+         stop("Y_raw should be a matrix or a SummarizedExperiment object!")
+    }
+
+    if (nrow(Prop0) < ncol(Prop0)) {
+         stop("Prop0 should have dimension N (samples) by K (cell types)!")
+    }
+    if (!ncol(Y_raw) == nrow(Prop0)) {
+         stop("Y_raw should have dimension P (features) by N (samples)!")
+    }
+
+    K <- ncol(Prop0)
+    N_sample <- nrow(Prop0)
 
     ## find tissue specific genes
     idx <- NULL

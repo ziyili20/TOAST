@@ -1,4 +1,6 @@
 import( stats )
+import( methods )
+import( SummarizedExperiment )
 import( RefFreeEWAS )
 import( EpiDISH )
 export(
@@ -6,8 +8,7 @@ export(
     csDeconv,
     csTest,
     DEVarSelect,
-    findRefinx_cv,
-    findRefinx_var,
+    findRefinx,
     fitModel,
     makeDesign
 )

@@ -17,7 +17,8 @@ InitMarker = NULL, TotalIter = 30)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{Y_raw}{
-   A G*N matrix, G is the number of features, N is the number of subjects.
+   A G*N matrix, G is the number of features, N is the number of subjects;
+   or a SummarizedExperiment object.
 }
   \item{K}{
    The number of cell types. Need to be specified a priori.

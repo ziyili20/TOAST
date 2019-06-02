@@ -18,7 +18,8 @@ The output from function makeDesign().
 }
   \item{Y}{
 A G*N matrix, G is the number of features,
-N is the number of subjects.
+N is the number of subjects;
+or a SummarizedExperiment object.
 }
 }
 \value{

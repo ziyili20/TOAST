@@ -5,7 +5,8 @@ csDeconv <- function(Y_raw,
                     InitMarker = NULL,
                     TotalIter = 30) {
     # Y_raw is the high-throughput measurement from complex tissues
-    #      (rows for features and columns for samples).
+    #      (rows for features and columns for samples);
+    #      or a SummarizedExperiment object.
     # K is the pre-specified number of pure cell types
     # FUN is the reference-free deconvolution function,
     #    this function should take Y_raw and K,
@@ -16,11 +17,18 @@ csDeconv <- function(Y_raw,
     #          if not specified, the top variable features will be used
     # TotalIter is the total number of iterations specified
 
+    if (is(Y_raw, "SummarizedExperiment")) {
+         se <- Y_raw
+         Y_raw <- assays(se)$counts
+    } else if (!is(Y_raw, "matrix")) {
+         stop("Y_raw should be a matrix or a SummarizedExperiment object!")
+    }
+
     if (is.null(rownames(Y_raw))) {
         row.names(Y_raw) <- seq(nrow(Y_raw))
     }
     if (is.null(InitMarker)) {
-        InitMarker <- findRefinx_var(Y_raw, nmarker = nMarker)
+        InitMarker <- findRefinx(Y_raw, nmarker = nMarker)
     } else {
         if (sum(!(InitMarker %in% rownames(Y_raw))) > 0) {
                 stop("Discrepancy between
@@ -40,12 +48,12 @@ csDeconv <- function(Y_raw,
     tmpmat <- prof %*% t(Prop0)
     allRMSE[1] <- sqrt(mean((t(Y_raw) - t(tmpmat)) ^ 2))
 
-    print("+========================================+")
-    print(paste0("+======= Total iterations = ",
-                TotalIter, " ==========+"))
+    message("+========================================+")
+    message("+======= Total iterations = ",
+                TotalIter, " ==========+")
 
     for (i in seq_len(TotalIter)) {
-        print(paste0("Current iter = ", i))
+        message("Current iter = ", i)
 
         updatedInx <- DEVarSelect(Y_raw, Prop0, nMarker)
         Y <- Y_raw[updatedInx, ]

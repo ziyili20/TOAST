@@ -15,7 +15,8 @@ DEVarSelect(Y_raw, Prop0, nMarker)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{Y_raw}{
-A data matrix containing P features and N samples.
+A data matrix containing P features and N samples;
+or a SummarizedExperiment object.
 }
   \item{Prop0}{
 A N by K proportion matrix with K as number of cell types.

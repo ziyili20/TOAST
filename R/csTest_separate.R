@@ -20,8 +20,8 @@ csTest_separate <- function(fitted_model,
                                 W, K, model_names,
                                 fitted_model, verbose)
     } else {
-        print("contrast_matrix is specified.")
-        print("Coef and cell_type will be ignored.")
+        message("contrast_matrix is specified.")
+        message("Coef and cell_type will be ignored.")
         cmatrix <- GetCMatrix_contrast(contrast_matrix, W, verbose)
     }
 

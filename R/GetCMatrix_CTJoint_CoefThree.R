@@ -2,7 +2,7 @@ GetCMatrix_CTJoint_CoefThree <- function(coef, model_names, W, K, verbose) {
 
     if (length(grep(coef[1], model_names)) >0) {
         if (verbose) {
-            cat("Test the joint effect of ", coef[1],
+            message("Test the joint effect of ", coef[1],
                 " level ", coef[2], " vs. level ", coef[3],
                 " in all cell types. \n", sep = "")
         }

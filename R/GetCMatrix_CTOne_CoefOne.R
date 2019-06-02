@@ -7,7 +7,7 @@ GetCMatrix_CTOne_CoefOne <- function(coef, cell_type, model_names, W, verbose) {
 
     if (length(grep(coef, celltype_names)) > 0){
         if (verbose) {
-            cat("Test the effect of ", coef, " in ",
+            message("Test the effect of ", coef, " in ",
                 cell_type, ". \n", sep = "")
         }
         param_vec = match(grep(coef, celltype_names, value = TRUE),

@@ -5,8 +5,15 @@ DEKTissue <- function(K, Y, Prop, design,
                     var_threshold=0.1,
                     logged = FALSE) {
 
-    N <- dim(Y)[2]
-    if(dim(Prop)[1]!=N | dim(Prop)[2]!=K){
+    if (is(Y, "SummarizedExperiment")) {
+         se <- Y
+         Y <- assays(se)$counts
+    } else if (!is(Y, "matrix")) {
+         stop("Y should be a matrix or a SummarizedExperiment object!")
+    }
+
+    N <- ncol(Y)
+    if(nrow(Prop)!=N | ncol(Prop)!=K){
         stop("Dimension of proportion input is not correct!")
     }
 

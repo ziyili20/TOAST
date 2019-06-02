@@ -11,7 +11,7 @@ GetCMatrix_CTOne_CoefThree <- function(coef,
 
     if (length(grep(coef[1], model_names)) >0) {
         if (verbose) {
-            cat("Test the effect of ", coef[1],
+            message("Test the effect of ", coef[1],
                 " level ", coef[2], " vs. level ", coef[3],
                 " in ", cell_type,". \n", sep = "")
         }

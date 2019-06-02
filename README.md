@@ -21,15 +21,16 @@
 ### Install TOAST
 
 
-In R, install the `TOAST` package by
+To install this package, start R (version "3.6") and enter:
 
 ```{r install, message=FALSE, warning=FALSE}
-library(devtools)
-install_github("ziyili20/TOAST", build_vignettes=TRUE)
- 
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("TOAST") 
 ```
 
-To view the package vignette in pdf format, run the following lines in R
+To view the package vignette in HTML format, run the following lines in R
 
 ```{r vig, message=FALSE, warning=FALSE}
 library(TOAST)
@@ -52,7 +53,8 @@ or DNA methylation matrix called `Y_raw`,
 a data frame of sample information called
 `design`, and a table of cellular composition
 information (i.e. mixing proportions) 
-called `prop`. If the cellular composition
+called `prop`. Instead of a data matrix, 
+`Y_raw` could also be a `SummarizedExperiment` object. If the cellular composition
 is not available, our vignette file 
 provides discussions about how to obtain mixing 
 proportions using reference-free deconvolution 
