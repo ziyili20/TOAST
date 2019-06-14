@@ -26,6 +26,7 @@ DEKTissue <- function(K, Y, Prop, design,
         W <- Prop
     }
     H <- solve(t(W)%*%W)%*%t(W)
+
     coefs <- H%*%Y
     Ypred <- W%*%coefs
     resi <- Y-Ypred
