@@ -1,16 +1,13 @@
 ---
 title: "**Analyses of high-throughput data from heterogeneous samples with TOAST**"
-author: 
+shorttitle: "TOAST guide"
+author:
 - name: Ziyi Li
-  affiliation: Department of Biostatistics and Bioinformatics, Emory University, Atlanta, GA 30322
   email: ziyi.li@emory.edu
 - name: Hao Wu
-  affiliation: Department of Biostatistics and Bioinformatics, Emory University, Atlanta, GA 30322
   email: hao.wu@emory.edu
-package: TOAST 0.99.4
-output:
-  BiocStyle::html_document
-abstract: |
+package: TOAST
+abstract: >
   This vignette introduces the usage of the 
   R package TOAST (TOols for the Analysis of 
   heterogeneouS Tissues). It is designed for 
@@ -24,10 +21,14 @@ abstract: |
   based on cross-cell type differential analysis. 
   TOAST is based on rigorous staitstical framework, 
   and provides great flexibility and superior computationl performance. 
-vignette: |
-  %\VignetteIndexEntry{Analyses of high-throughput data from heterogeneous samples with TOAST}
+
+vignette: >
+  %\VignetteIndexEntry{The TOAST User's Guide}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+output:
+  BiocStyle::html_document:
+    toc_float: true
 ---
 
 \tableofContents
@@ -371,7 +372,7 @@ also be a `SummarizedExperiment` object.
 ```{r IRB-RFCM2, results='hide', message=FALSE, warning=FALSE}
 K=6
 set.seed(1234)
-outRF1 <- csDeconv(Y_raw, K, TotalIter = 30) 
+outRF1 <- csDeconv(Y_raw, K, TotalIter = 30, bound_negative = TRUE) 
 ```
 
 3. Comparing udpated RF estimations versus RB results.
@@ -396,6 +397,16 @@ InitNames <- rownames(Y_raw)[refinx]
 csDeconv(Y_raw, K = 6, nMarker = 1000, 
          InitMarker = InitNames, TotalIter = 30)
 ```
+
+__***A word about bounding the negative estimators***__
+
+Since all the parameters represent the mean observation levels for
+each cell type, it may not be reasonable to have negative estimators.
+As such, we provide options to bound negative estimated parameters to zero
+through the `bound_negative` argument in `csDeconv()` function. Although
+we find bounding negative estimators has minimum impact on the performance,
+the users could choose to bound or not bound the negative values in the function.
+The default value for `bound_negative` is FALSE.
 
 ### Improved-RF with use-defined RF function
 
@@ -427,7 +438,7 @@ mydeconv <- function(Y, K){
      return(Prop0)
 }
 set.seed(1234)
-outT <- csDeconv(Y_raw, K, FUN = mydeconv)
+outT <- csDeconv(Y_raw, K, FUN = mydeconv, bound_negative = TRUE)
 ```
 
 

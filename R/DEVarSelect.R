@@ -1,4 +1,4 @@
-DEVarSelect <- function(Y_raw, Prop0, nMarker = 1000){
+DEVarSelect <- function(Y_raw, Prop0, nMarker = 1000, bound_negative = FALSE){
 
     if (is(Y_raw, "SummarizedExperiment")) {
          se <- Y_raw
@@ -26,7 +26,8 @@ DEVarSelect <- function(Y_raw, Prop0, nMarker = 1000){
         tmp <- DEKTissue(K, Y=Y_raw,
                       Prop=Prop0,
                       design=design,
-                      contrast_vec=cvec)
+                      contrast_vec=cvec,
+                      bound_negative=bound_negative)
         idx[[k]] <- sort(abs(tmp$t_stat),
                       decreasing=TRUE,
                       index=TRUE)$ix

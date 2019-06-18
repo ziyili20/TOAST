@@ -12,7 +12,7 @@ type differential analysis
 }
 \usage{
 csDeconv(Y_raw, K, FUN, nMarker = 1000,
-InitMarker = NULL, TotalIter = 30)
+InitMarker = NULL, TotalIter = 30, bound_negative = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -43,6 +43,9 @@ InitMarker = NULL, TotalIter = 30)
   \item{TotalIter}{
    The total number of iterations of applying cross-cell
    type differential analysis. Default is 30.
+}
+\item{bound_negative}{
+Whether to bound all negative parameter estimators to zero.
 }
 }
 \value{

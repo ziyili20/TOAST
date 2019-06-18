@@ -3,7 +3,8 @@ csDeconv <- function(Y_raw,
                     FUN = RefFreeCellMix_wrapper,
                     nMarker = 1000,
                     InitMarker = NULL,
-                    TotalIter = 30) {
+                    TotalIter = 30,
+                    bound_negative = FALSE) {
     # Y_raw is the high-throughput measurement from complex tissues
     #      (rows for features and columns for samples);
     #      or a SummarizedExperiment object.
@@ -28,7 +29,12 @@ csDeconv <- function(Y_raw,
         row.names(Y_raw) <- seq(nrow(Y_raw))
     }
     if (is.null(InitMarker)) {
-        InitMarker <- findRefinx(Y_raw, nmarker = nMarker)
+        if (nrow(Y_raw) < 2000) {
+            InitMarker <- findRefinx(Y_raw, nmarker = nMarker)
+        } else {
+            tmp <- findRefinx(Y_raw, nmarker = nMarker*2)
+            InitMarker <- tmp[nMarker+1:nMarker]
+        }
     } else {
         if (sum(!(InitMarker %in% rownames(Y_raw))) > 0) {
                 stop("Discrepancy between
@@ -55,7 +61,7 @@ csDeconv <- function(Y_raw,
     for (i in seq_len(TotalIter)) {
         message("Current iter = ", i)
 
-        updatedInx <- DEVarSelect(Y_raw, Prop0, nMarker)
+        updatedInx <- DEVarSelect(Y_raw, Prop0, nMarker, bound_negative)
         Y <- Y_raw[updatedInx, ]
         Prop0 <- FUN(Y, K)
         allProp[[i + 1]] <- Prop0

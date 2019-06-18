@@ -3,7 +3,8 @@ DEKTissue <- function(K, Y, Prop, design,
                     contrast_vec=NULL,
                     sort=FALSE,
                     var_threshold=0.1,
-                    logged = FALSE) {
+                    logged = FALSE, 
+                    bound_negative = FALSE) {
 
     if (is(Y, "SummarizedExperiment")) {
          se <- Y
@@ -26,7 +27,6 @@ DEKTissue <- function(K, Y, Prop, design,
         W <- Prop
     }
     H <- solve(t(W)%*%W)%*%t(W)
-
     coefs <- H%*%Y
     Ypred <- W%*%coefs
     resi <- Y-Ypred
@@ -87,6 +87,9 @@ DEKTissue <- function(K, Y, Prop, design,
             rownames(res_table) <- colnames(Y)
             i <- which(contrast_vec!=0)[1]
             j <- which(contrast_vec!=0)[2]
+            if (bound_negative) {
+                coefs[coefs<0] <- 0
+            }
             res_table$muA <- coefs[i,]
             res_table$muB <- coefs[j,]
             demtmp <- as.numeric(sqrt(abs(contrast_vec)%*%varBeta))

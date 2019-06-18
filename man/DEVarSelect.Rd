@@ -10,7 +10,7 @@ This function selects cross-cell type
 differential features for reference-free deconvolution.
 }
 \usage{
-DEVarSelect(Y_raw, Prop0, nMarker)
+DEVarSelect(Y_raw, Prop0, nMarker, bound_negative)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -23,6 +23,9 @@ A N by K proportion matrix with K as number of cell types.
 }
   \item{nMarker}{
 Number of markers selected.
+}
+\item{bound_negative}{
+Whether to bound all negative parameter estimators to zero.
 }
 }
 \value{
@@ -41,5 +44,7 @@ Ziyi Li <ziyi.li@emory.edu>
 Y_raw <- matrix(runif(5000*20, 0, 1), 5000, 20)
 tmp <- matrix(runif(20*4), 20, 4)
 Prop0 <- sweep(tmp, 1, rowSums(tmp), "/")
-varlist <- DEVarSelect(Y_raw, Prop0, nMarker=1000)
+varlist <- DEVarSelect(Y_raw, Prop0,
+                       nMarker=1000,
+                       bound_negative=FALSE)
 }
