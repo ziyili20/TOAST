@@ -27,7 +27,10 @@ To install this package, start R (version "3.6") and enter:
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-BiocManager::install("TOAST") 
+# The following initializes usage of Bioc devel
+BiocManager::install(version='devel')
+
+BiocManager::install("TOAST")
 ```
 
 To view the package vignette in HTML format, run the following lines in R
