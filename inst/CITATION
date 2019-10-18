@@ -8,3 +8,17 @@ citEntry(entry="article",
          paste("Ziyi Li, Zhijin Wu, Peng Jin, Hao Wu (2019):",
                "Dissecting differential signals in high-throughput data from complex tissues. ", 
                 "Bioinformatics. doi:10.1093/bioinformatics/btz196" ) )
+
+citEntry(entry="article",
+         title = "TOAST: improving reference-free cell composition estimation by cross-cell type differential analysis",
+         author = personList( as.person("Ziyi Li"), as.person("Hao Wu")), 
+         year = 2019,
+         journal = "Genome Biology",
+         volume={20},
+         number={1},
+         pages={1--17},
+         year={2019},
+         textVersion =
+         paste("Ziyi Li, Hao Wu (2019):",
+               "TOAST: improving reference-free cell composition estimation by cross-cell type differential analysis. ", 
+                "Genome biology 20.1 (2019): 1-17" ) )

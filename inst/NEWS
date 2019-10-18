@@ -4,3 +4,7 @@ CHANGES IN VERSION 0.99
 NEW FEATURES
 
   o Initial release.
+
+CHANGES IN VERSION 0.99.7
+----------------------
+  o Add options to improve feature selections in reference-free deconvolution.
