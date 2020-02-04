@@ -8,3 +8,7 @@ NEW FEATURES
 CHANGES IN VERSION 0.99.7
 ----------------------
   o Add options to improve feature selections in reference-free deconvolution.
+
+CHANGES IN VERSION 1.1.1
+----------------------
+  o Add options for partial reference-free deconvolution.

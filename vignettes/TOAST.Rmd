@@ -28,7 +28,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 output:
   BiocStyle::html_document:
-    toc_float: true
+    toc_float: FALSE
 ---
 
 \tableofContents
@@ -47,7 +47,7 @@ collected in these studies, such as blood, tumor,
 or brain tissue, are mixtures of a number of different
 cell types.  The sample mixing complicates data analysis
 because the experimental data from the high-throughput 
-experiments are weighted average of signals from multiple
+experiments are weighted averages of signals from multiple
 cell types. For these data, traditional analysis methods that ignores
 the cell mixture 
 will lead to results with low resolution,  biased, or
@@ -105,6 +105,10 @@ to detect cell-type specific DE/DM, as well
 as differences across different cell types. 
 TOAST also has functions to improve the 
 accuracy of reference-free deconvolutions through better feature selection.
+If cell type-specific markers (or prior knowledge of cell compositions)
+are available, TOAST provides partial reference-free
+deconvolution function, which is more accuracte than RF methods
+and works well even for very small sample size (e.g.<10).
 
 <!-- In future works, we plan to add more 
 components and expand our answers to the above questions.   -->
@@ -161,12 +165,11 @@ head(res_table)
 
 # Example dataset
 
-TOAST provides an example dataset of 450K 
-DNA methylation. The following sections will
-use this example dataset to demonstrate 
-function usages. 
+TOAST provides two sample dataset.
 
-We obtain and process this dataset based 
+The first example dataset is 450K 
+DNA methylation data. We obtain and process 
+this dataset based 
 on the raw data provided by GSE42861. This
 is a DNA methylation 450K data for Rheumatoid
 Arthiritis patients and controls. 
@@ -204,7 +207,43 @@ dim(Blood_ref)
 head(Blood_ref, 3)
 ```
 
+The second example dataset is microarray gene
+expression data. We obtain and process 
+this dataset based 
+on the raw data provided by GSE65133. This
+microarary data is from 20 PBMC samples.
+The original dataset has 47323 probes. We mapped 
+the probes into 21626 genes and then further 
+reduced the dataset to 511 genes by
+selecting the genes that have matches 
+in reference panel.
+```{r loadDataCBS}
+data("CBS_PBMC_array")
+CBS_mix <- CBS_PBMC_array$mixed_all
+LM_5 <- CBS_PBMC_array$LM_5
+CBS_trueProp <- CBS_PBMC_array$trueProp
+prior_alpha <- CBS_PBMC_array$prior_alpha
+prior_sigma <- CBS_PBMC_array$prior_sigma
+```
 
+Check the PBMC microarray gene expression
+data and true proportions
+```{r checkDataCBS}
+dim(CBS_mix) 
+CBS_mix[1:4,1:4]
+head(CBS_trueProp, 3)
+```
+
+Check reference matrix for 5 immune cell types
+```{r checkLM5}
+head(LM_5, 3)
+```
+
+Check prior knowledge for the 5 cell types
+```{r checkPrior}
+prior_alpha
+prior_sigma
+```
 
 # Estimate mixing proportions
 
@@ -237,13 +276,23 @@ using `r Biocpkg("EpiDISH")` (Teschendorff et al. 2017) as a
 representation of reference-based methods. 
 
 We also provide function to improve reference-free
-deconvolution performance in Section \@ref(section:ImpRF).
-Note that in the following example, we have only 
-3000 features in the Y_raw dataset, thus the proportion estimation 
+deconvolution performance in Section \@ref(section:ImpRF), which
+works for both gene expression data and DNA methylation data.
+The example in Section \@ref(section:ImpRF) demonstrates
+the usage of this. Note that we have only 
+3000 features in the Y_raw from RA_100samples dataset, 
+thus the proportion estimation 
 is not very accurate. Real 450K dataset should 
 have around 485,000 features. More features generally
-lead to better estimation, because there are more information in the data. 
+lead to better estimation, because there 
+are more information in the data. 
 
+In Secion XXX, we demonstrate the usage of partial
+reference-free (PRF) deconvolution. Compared to RB methods,
+PRF does not require reference panel thus can be more
+wdiely applied. Compared to RF methods, PRF uses additional
+biological information, which improves the estimation accuracy
+and automatically assign cell type labels. 
 
 ## Reference-based deconvolution using least square method {#section:RB}
 
@@ -441,7 +490,103 @@ set.seed(1234)
 outT <- csDeconv(Y_raw, K, FUN = mydeconv, bound_negative = TRUE)
 ```
 
+## Partial reference-free deconvolution (TOAST/-P and TOAST/+P)
 
+Similar to DSA, our PRF method requires 
+the knowledge of **cell type-specific markers**.
+Such markers can be selected from pure 
+cell type gene expression
+profiles from same or different platforms (through
+function `ChooseMarker()`). They can also 
+be manually specified 
+(see function manual `?MDeconv` for more explanation).
+The **prior knowledge of cell compositions**
+are optional, but
+highly recommended. We find prior 
+knowledge of cell compositions (`alpha` and `sigma`)
+help calibrate the scales of the estimations, 
+and reduce estimation bias. Such information 
+can be estimated from previous cell sorting 
+experiments or single cell study.
+We currently provide prior knowledge for five 
+tissue types: "human pbmc","human
+liver", "human brain", "human pancreas", "human skin",
+which can be directly specified in `MDeconv()` function.
+
+### Choose cell type-specific markers
+
+We provide functions to choose cell type-specific markers
+from pure cell type profiles or single cell RNA-seq data.
+Here we demonstrate how to select markers from 
+PBMC pure cell type gene expression profile.
+```{r chooseMarker}
+## create cell type list:
+CellType <- list(Bcells = 1,
+                 CD8T = 2,
+                 CD4T = 3,
+                 NK = 4,
+                 Monocytes = 5)
+## choose (up to 20) significant markers 
+## per cell type
+myMarker <- ChooseMarker(LM_5, 
+                         CellType, 
+                         nMarkCT = 20,
+                         chooseSig = TRUE,
+                         verbose = FALSE)
+lapply(myMarker, head, 3)
+```
+
+### PRF deconvolution without prior (TOAST/-P)
+
+```{r PRFwithoutPrior}
+resCBS0 <- MDeconv(CBS_mix, myMarker,
+                epsilon = 1e-3, verbose = FALSE)
+diag(cor(CBS_trueProp, t(resCBS0$H)))
+mean(abs(as.matrix(CBS_trueProp) - t(resCBS0$H)))
+```
+
+### PRF deconvolution with prior (TOAST/+P)
+We allow manually input the prior knowledge of all cell types,
+or select from currently supported tissues ("human pbmc","human
+liver", "human brain", "human pancreas", "human skin"). Note
+that order of cell types in prior knowledge here should
+match the order in marker list. 
+
+Here is an example of manually specifying alpha and sigma:
+```{r manualalpha}
+prior_alpha <- c(0.09475, 0.23471, 0.33232, 0.0969, 0.24132)
+prior_sigma <- c(0.09963, 0.14418, 0.16024, 0.10064, 0.14556)
+names(prior_alpha) <- c("B cells", "CD8T", "CD4T",
+                        "NK cells", "Monocytes")
+names(prior_sigma) <- names(prior_alpha) 
+```
+
+Here is to see alpha and sigma for supported tisuses using 
+`GetPrior()`:
+```{r getprior}
+thisprior <- GetPrior("human pbmc")
+thisprior
+```
+
+Deconvolution using manually input alpha and sigma:
+```{r PRFwithPrior}
+resCBS1 <- MDeconv(CBS_mix, myMarker,
+                alpha = prior_alpha,
+                sigma = prior_sigma,
+                epsilon = 1e-3, verbose = FALSE)
+diag(cor(CBS_trueProp, t(resCBS1$H)))
+mean(abs(as.matrix(CBS_trueProp) - t(resCBS1$H)))
+```
+
+For supported tissues, you can directly specify tissue type
+as alpha input:
+```{r PRFwithPrior2}
+resCBS2 <- MDeconv(CBS_mix, myMarker,
+                   alpha = "human pbmc",,
+                   epsilon = 1e-3, verbose = FALSE)
+diag(cor(CBS_trueProp, t(resCBS2$H)))
+mean(abs(as.matrix(CBS_trueProp) - t(resCBS2$H)))
+```
 
 # Detect cell type-specific and cross-cell type differential signals {#section:csDE}
 

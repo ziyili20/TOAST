@@ -3,6 +3,8 @@ import( methods )
 import( SummarizedExperiment )
 import( RefFreeEWAS )
 import( EpiDISH )
+import( limma )
+import( nnls )
 export(
     assignCellType,
     csDeconv,
@@ -10,5 +12,8 @@ export(
     DEVarSelect,
     findRefinx,
     fitModel,
-    makeDesign
+    makeDesign,
+    ChooseMarker,
+    GetPrior,
+    MDeconv
 )
