@@ -66,6 +66,7 @@ csTest_separate <- function(fitted_model,
     }
 
     rownames(res_table) = rownames(fitted_model$Y)
+
     if (sort) {
         res_table = res_table[order(res_table$p_value), ]
     }
