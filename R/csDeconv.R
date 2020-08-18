@@ -1,10 +1,10 @@
 csDeconv <- function(Y_raw,
-                    K,
-                    FUN = RefFreeCellMix_wrapper,
-                    nMarker = 1000,
-                    InitMarker = NULL,
-                    TotalIter = 30,
-                    bound_negative = FALSE) {
+                     K,
+                     FUN = RefFreeCellMix_wrapper,
+                     nMarker = 1000,
+                     InitMarker = NULL,
+                     TotalIter = 30,
+                     bound_negative = FALSE) {
     # Y_raw is the high-throughput measurement from complex tissues
     #      (rows for features and columns for samples);
     #      or a SummarizedExperiment object.
@@ -19,10 +19,10 @@ csDeconv <- function(Y_raw,
     # TotalIter is the total number of iterations specified
 
     if (is(Y_raw, "SummarizedExperiment")) {
-         se <- Y_raw
-         Y_raw <- assays(se)$counts
+        se <- Y_raw
+        Y_raw <- assays(se)$counts
     } else if (!is(Y_raw, "matrix")) {
-         stop("Y_raw should be a matrix or a SummarizedExperiment object!")
+        stop("Y_raw should be a matrix or a SummarizedExperiment object!")
     }
 
     if (is.null(rownames(Y_raw))) {
@@ -37,7 +37,7 @@ csDeconv <- function(Y_raw,
         }
     } else {
         if (sum(!(InitMarker %in% rownames(Y_raw))) > 0) {
-                stop("Discrepancy between
+            stop("Discrepancy between
                     InitMarker and the row names of Y_raw!")
         }
     }
@@ -56,7 +56,7 @@ csDeconv <- function(Y_raw,
 
     message("+========================================+")
     message("+======= Total iterations = ",
-                TotalIter, " ==========+")
+            TotalIter, " ==========+")
 
     for (i in seq_len(TotalIter)) {
         message("Current iter = ", i)
@@ -76,7 +76,8 @@ csDeconv <- function(Y_raw,
     Prop0 <- allProp[[min_idx]]
 
     return(list(allRMSE = allRMSE,
-        allProp = allProp,
-        estProp = Prop0
+                allProp = allProp,
+                estProp = Prop0,
+                updatedInx = updatedInx
     ))
 }

@@ -11,10 +11,6 @@ fitModel <- function(Design_out, Y) {
          stop("Y should be a matrix or a SummarizedExperiment object!")
     }
 
-    if (nrow(Y) < ncol(Y)) {
-         stop("Y should have dimension P (features) by N (samples)!")
-    }
-
     N <- ncol(Y)
     Y <- t(Y)
     W <- Design_out$design_matrix

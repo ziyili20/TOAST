@@ -57,6 +57,9 @@ Whether to bound all negative parameter estimators to zero.
   mixture proportions
   of K cell types in N subjects,
   chosen from allProp with the smallest RMSE.}
+  \item{updatedInx}{
+  Selected variable index from the algorithm.
+  }
 }
 \references{
 Ziyi Li and Hao Wu.

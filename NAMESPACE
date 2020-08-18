@@ -5,7 +5,9 @@ import( RefFreeEWAS )
 import( EpiDISH )
 import( limma )
 import( nnls )
+import( corpcor )
 export(
+    Tsisal,
     assignCellType,
     csDeconv,
     csTest,
