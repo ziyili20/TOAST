@@ -45,9 +45,14 @@ csTest_separate <- function(fitted_model,
         p_value = rep(0, G),
         fdr = rep(0, G)
     )
-    res_table$f_statistics <- rowSums(a1 * t(tmp2)) * inv_sigma
-    res_table$p_value <- pf(abs(res_table$f_stat),
-                        df1 = 1,
+    if (nrow(cmatrix) > 1) {
+         df1 = nrow(cmatrix)
+    } else {
+         df1 = 1
+    }
+    res_table$f_statistics <- rowSums(a1 * t(tmp2)) * inv_sigma/df1
+    res_table$p_value <- pf(abs(res_table$f_statistics),
+                        df1 = df1,
                         df2 = N - ncol(W),
                         lower.tail = FALSE)
     res_table$fdr <- p.adjust(res_table$p_value, method = 'fdr')

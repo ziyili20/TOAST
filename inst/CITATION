@@ -25,3 +25,32 @@ citEntry(entry="article",
          paste("Ziyi Li, Hao Wu (2019):",
                "TOAST: improving reference-free cell composition estimation by cross-cell type differential analysis. ", 
                 "Genome biology 20.1 (2019): 1-17" ) )
+
+citEntry(entry="article",
+         title = "Robust partial reference-free cell composition estimation from tissue expression",
+         author = personList( as.person("Ziyi Li"), as.person("Zhenxing Guo"), as.person("Ying Cheng"), as.person("Peng Jin"), as.person("Hao Wu")), 
+         year = 2020,
+         journal = "Bioinformatics",
+         volume={36},
+  	 number={11},
+  	 pages={3431--3438},
+  	 year={2020},
+         textVersion =
+         paste("Ziyi Li, Zhenxing Guo, Ying Cheng, Peng Jin, Hao Wu (2019):",
+               "Robust partial reference-free cell composition estimation from tissue expression. ", 
+                "Bioinformatics. 36.11 (2020): 3431-3438" ) )
+
+citEntry(entry="article",
+         title = "Complete deconvolution of DNA methylation signals from complex tissues: a geometric approach",
+         author = personList( as.person("Weiwei Zhang"), as.person("Hao Wu"), as.person("Ziyi Li")), 
+         year = 2020,
+         journal = "Bioinformatics",
+         volume={X},
+         number={X},
+         pages={X},
+         year={2020},
+         textVersion =
+         paste("Weiwei Zhang, Hao Wu, Ziyi Li (2020):",
+               "Complete deconvolution of DNA methylation signals from complex tissues: a geometric approach. ", 
+                "Bioinformatics" ) )
+
