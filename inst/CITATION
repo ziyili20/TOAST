@@ -40,17 +40,3 @@ citEntry(entry="article",
                "Robust partial reference-free cell composition estimation from tissue expression. ", 
                 "Bioinformatics. 36.11 (2020): 3431-3438" ) )
 
-citEntry(entry="article",
-         title = "Complete deconvolution of DNA methylation signals from complex tissues: a geometric approach",
-         author = personList( as.person("Weiwei Zhang"), as.person("Hao Wu"), as.person("Ziyi Li")), 
-         year = 2020,
-         journal = "Bioinformatics",
-         volume={X},
-         number={X},
-         pages={X},
-         year={2020},
-         textVersion =
-         paste("Weiwei Zhang, Hao Wu, Ziyi Li (2020):",
-               "Complete deconvolution of DNA methylation signals from complex tissues: a geometric approach. ", 
-                "Bioinformatics" ) )
-
