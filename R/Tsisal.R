@@ -1,5 +1,5 @@
 Tsisal <- function(Y_raw, K = NULL, knowRef = NULL,
-                   possibleCellNumber = 3:15){
+                   possibleCellNumber = 3:15, assignThres = 0.55){
 
      # Y_raw is the DNA methylation 450K array data from complex tissues,
      # rows for CpG sites and columns for samples.
@@ -28,7 +28,7 @@ Tsisal <- function(Y_raw, K = NULL, knowRef = NULL,
           prof <- t(out_all$ghat)
           rownames(prof) <- rownames(Y_raw)
           selProf <- prof[unlist(selMarker),]
-          labres <- GetCorRes(selProf, knowRefAll = knowRef)
+          labres <- GetCorRes(selProf, knowRefAll = knowRef, threshold = assignThres)
           colnames(estProp) <- labres$assignLabel
      }
 
