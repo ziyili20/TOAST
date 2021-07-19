@@ -12,15 +12,21 @@ GetCorRes <- function(selProf, knowRefAll, threshold = 0.55) {
      summat <- (cormat + nbmat)/2
      summat_org <- summat
      assignLabel <- rep("Unassigned", ncol(selProf))
+     maxSummat <- rep(0, ncol(selProf))
      for(i in 1:ncol(knowRefAll)) {
              if (max(summat) > threshold) {
                      thisidx <- which(summat == max(summat), arr.ind = TRUE)
+                     maxSummat[thisidx[2]] <- max(summat)
                      assignLabel[thisidx[2]] <- rownames(summat)[thisidx[1]]
                      summat[thisidx[1],] <- -1
                      summat[,thisidx[2]] <- -1 ## I add this
+             } else {
+                     thisidx <- which(summat == max(summat), arr.ind = TRUE)
+                     maxSummat[thisidx[2]] <- max(summat)
              }
           
      }
      return(list(assignLabel = assignLabel,
-                 probMat = summat_org))
+                 probMat = summat_org,
+                 scoreAssign = maxSummat))
 }

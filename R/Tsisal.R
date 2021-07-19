@@ -30,9 +30,17 @@ Tsisal <- function(Y_raw, K = NULL, knowRef = NULL,
           selProf <- prof[unlist(selMarker),]
           labres <- GetCorRes(selProf, knowRefAll = knowRef, threshold = assignThres)
           colnames(estProp) <- labres$assignLabel
+          scoreLabels <- labres$scoreAssign
+          return(list(estProp = estProp,
+                      selMarker = selMarker,
+                      K = K,
+                      scoreLabels = scoreLabels))
+          
+     } else {
+             return(list(estProp = estProp,
+                         selMarker = selMarker,
+                         K = K)) 
      }
 
-     return(list(estProp = estProp,
-                 selMarker = selMarker,
-                 K = K))
+     
 }
