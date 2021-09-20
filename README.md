@@ -43,9 +43,9 @@ The content in this README file is essentially the same as the package vignette.
 
 ### How to get help for TOAST
 
-Any TOAST questions should be posted
+You can post TOAST-related questions
 to the GitHub Issue section of TOAST 
-homepage at https://github.com/ziyili20/TOAST/issues.
+homepage at https://github.com/ziyili20/TOAST/issues. You can also email me at zli16@mdanderson.org.
 
 ### Quick start on detecting cell type-specific differential signals
 
