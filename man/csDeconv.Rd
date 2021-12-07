@@ -67,7 +67,7 @@ Ziyi Li and Hao Wu.
 estimation by cross-cell type differential analysis".
 }
 \author{
-Ziyi Li <ziyi.li@emory.edu>
+Ziyi Li <zli16@mdanderson.org>
 }
 \examples{
 Y_raw <- abs(matrix(runif(10000*20, 0,1),10000,20))
@@ -81,8 +81,8 @@ K <- 3
 outT <- csDeconv(Y_raw, K)
 
 RefFreeCellMix_wrapper <- function(Y, K){
-     outY = RefFreeEWAS::RefFreeCellMix(Y,
-     mu0=RefFreeEWAS::RefFreeCellMixInitialize(Y,
+     outY = myRefFreeCellMix(Y,
+     mu0=myRefFreeCellMixInitialize(Y,
      K = K))
      Prop0 = outY$Omega
      return(Prop0)

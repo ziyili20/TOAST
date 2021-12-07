@@ -11,9 +11,8 @@ RefFreeCellMix_wrapper <- function(Y, K) {
     if (K<0 | K>ncol(Y)) {
          stop("K should be between 0 and N (samples)!")
     }
-    outY <- RefFreeEWAS::RefFreeCellMix(Y,
-           mu0=RefFreeEWAS::RefFreeCellMixInitialize(Y,
-                                                     K = K))
+    outY <- myRefFreeCellMix(Y,
+           mu0=myRefFreeCellMixInitialize(Y, K = K))
     Prop0 <- outY$Omega
     return(Prop0)
 }

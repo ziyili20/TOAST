@@ -3,7 +3,7 @@ title: "**Analyses of high-throughput data from heterogeneous samples with TOAST
 shorttitle: "TOAST guide"
 author:
 - name: Ziyi Li
-  email: ziyi.li@emory.edu
+  email: zli16@mdanderson.org
 - name: Hao Wu
   email: hao.wu@emory.edu
 package: TOAST
@@ -276,10 +276,12 @@ In many situations, mixing proportions
 are not readily available. There are a number of deconvolution methods
 available to solve this problem. To name a few:
 
-* For DNA methylation: `r CRANpkg("RefFreeEWAS")`
+* For DNA methylation: The R package RefFreeEWAS
 (Houseman et al. 2016) is reference-free,  
 and `r Biocpkg("EpiDISH")` (Teschendorff et al. 2017)
-is reference-based.  
+is reference-based.  The package RefFreeEWAS was a CRAN package
+but removed from the archive recently due to lack of maintenance. 
+To facilitate the usage, we copied their function in our current package.
 
 * For gene expression: qprog (Gong et al. 2011), 
 deconf (Repsilber et al. 2010),  
@@ -292,7 +294,7 @@ methods and is a good resource to look up.
 
 Here we demonstrate two ways to estimate 
 mixing proportions, one using 
-`r CRANpkg("RefFreeEWAS")` (Houseman et al. 2016), representing the
+RefFreeEWAS (Houseman et al. 2016), representing the
 class of reference-free methods, and the other
 using `r Biocpkg("EpiDISH")` (Teschendorff et al. 2017) as a 
 representation of reference-based methods. 
@@ -368,13 +370,7 @@ refinx = findRefinx(Y_raw, nmarker=1000, sortBy = "var")
 
 ## Reference-free deconvolution using RefFreeEWAS
 
-1. Load `r CRANpkg("RefFreeEWAS")`.
-
-```{r DF, message=FALSE, warning=FALSE}
-library(RefFreeEWAS)
-```
-
-2. Similar to Reference-based deconvolution 
+1. Similar to Reference-based deconvolution 
 we also select the top 1000 most variant 
 features by `findRefinx()`. And then subset data.
 ```{r DF2}
@@ -382,11 +378,11 @@ refinx <- findRefinx(Y_raw, nmarker = 1000)
 Y <- Y_raw[refinx,]
 ```
 
-3. Do reference-free deconvolution on the RA dataset.
+2. Do reference-free deconvolution on the RA dataset.
 
 ```{r, DF3, results='hide', message=FALSE, warning=FALSE}
 K <- 6
-outT <- RefFreeCellMix(Y, mu0=RefFreeCellMixInitialize(Y, K = K))
+outT <- myRefFreeCellMix(Y, mu0=myRefFreeCellMixInitialize(Y, K = K))
 estProp_RF <- outT$Omega
 ```
 
@@ -416,15 +412,14 @@ selection through cross-cell type
 differential analysis.  We implement
 two versions of such improvement, 
 one is for DNA methylation microarray 
-data using `RefFreeCellMix` from `r CRANpkg("RefFreeEWAS")` 
-package, the other one is for gene 
+data using `myRefFreeCellMix` originally from R package [RefFreeEWAS](https://cran.r-project.org/web/packages/RefFreeEWAS/index.html), 
+the other one is for gene 
 expression microarray data using `deconf`
 from [CellMix](https://github.com/rforge/cellmix) package. 
-To implement both, `r CRANpkg("RefFreeEWAS")` 
-and [CellMix](https://github.com/rforge/cellmix) 
+To implement this, [CellMix](https://github.com/rforge/cellmix) 
 need to be installed first.
 
-### Improved-RF with RefFreeCellMix {#section:RFimp}
+### Improved-RF with myRefFreeCellMix {#section:RFimp}
 
 1. Load TOAST package.
 
@@ -485,7 +480,7 @@ In order to use other RF functions, users can
 wrap the RF function a bit first to make it 
 accept Y (raw data) and K (number of cell types)
 as input, and return a N (number of cell types) 
-by K proportion matrix. We take `RefFreeCellMix()`
+by K proportion matrix. We take `myRefFreeCellMix()`
 as an example. Other deconvolution methods can be
 used similarly.
 
@@ -502,8 +497,8 @@ mydeconv <- function(Y, K){
      if (K<0 | K>ncol(Y)) {
          stop("K should be between 0 and N (samples)!")
      }
-     outY = RefFreeEWAS::RefFreeCellMix(Y, 
-               mu0=RefFreeEWAS::RefFreeCellMixInitialize(Y, 
+     outY = myRefFreeCellMix(Y, 
+               mu0=myRefFreeCellMixInitialize(Y, 
                K = K))
      Prop0 = outY$Omega
      return(Prop0)

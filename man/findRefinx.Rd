@@ -38,7 +38,7 @@ Ziyi Li, Zhijin Wu, Peng Jin, Hao Wu.
 complex tissues."
 }
 \author{
-Ziyi Li <ziyi.li@emory.edu>
+Ziyi Li <zli16@mdanderson.org>
 }
 \examples{
 Y_raw <- matrix(runif(5000*20, 0, 1), 5000, 20)

@@ -33,7 +33,7 @@ Ziyi Li, Zhenxing Guo, Ying Cheng, Peng Jin, Hao Wu.
 from tissue expression profiles."
 }
 \author{
-Ziyi Li <ziyi.li@emory.edu>
+Ziyi Li <zli16@mdanderson.org>
 }
 \examples{
 GetPrior("human pbmc")

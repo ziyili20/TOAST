@@ -1,6 +1,9 @@
 citEntry(entry="article",
          title = "Dissecting differential signals in high-throughput data from complex tissues",
-         author = personList( as.person("Ziyi Li"), as.person("Zhijin Wu"), as.person("Peng Jin"), as.person("Hao Wu")), 
+         author = personList( as.person("Ziyi Li"),
+                              as.person("Zhijin Wu"),
+                              as.person("Peng Jin"),
+                              as.person("Hao Wu")),
          year = 2019,
          journal = "Bioinformatics",
          volume={35},
@@ -9,12 +12,12 @@ citEntry(entry="article",
   	 year={2019},
          textVersion =
          paste("Ziyi Li, Zhijin Wu, Peng Jin, Hao Wu (2019):",
-               "Dissecting differential signals in high-throughput data from complex tissues. ", 
+               "Dissecting differential signals in high-throughput data from complex tissues. ",
                 "Bioinformatics. doi:10.1093/bioinformatics/btz196" ) )
 
 citEntry(entry="article",
          title = "TOAST: improving reference-free cell composition estimation by cross-cell type differential analysis",
-         author = personList( as.person("Ziyi Li"), as.person("Hao Wu")), 
+         author = personList( as.person("Ziyi Li"), as.person("Hao Wu")),
          year = 2019,
          journal = "Genome Biology",
          volume={20},
@@ -23,12 +26,16 @@ citEntry(entry="article",
          year={2019},
          textVersion =
          paste("Ziyi Li, Hao Wu (2019):",
-               "TOAST: improving reference-free cell composition estimation by cross-cell type differential analysis. ", 
+               "TOAST: improving reference-free cell composition estimation by cross-cell type differential analysis. ",
                 "Genome biology 20.1 (2019): 1-17" ) )
 
 citEntry(entry="article",
          title = "Robust partial reference-free cell composition estimation from tissue expression",
-         author = personList( as.person("Ziyi Li"), as.person("Zhenxing Guo"), as.person("Ying Cheng"), as.person("Peng Jin"), as.person("Hao Wu")), 
+         author = personList( as.person("Ziyi Li"),
+                                 as.person("Zhenxing Guo"),
+                                 as.person("Ying Cheng"),
+                                 as.person("Peng Jin"),
+                                 as.person("Hao Wu")),
          year = 2020,
          journal = "Bioinformatics",
          volume={36},
@@ -37,6 +44,22 @@ citEntry(entry="article",
   	 year={2020},
          textVersion =
          paste("Ziyi Li, Zhenxing Guo, Ying Cheng, Peng Jin, Hao Wu (2019):",
-               "Robust partial reference-free cell composition estimation from tissue expression. ", 
+               "Robust partial reference-free cell composition estimation from tissue expression. ",
                 "Bioinformatics. 36.11 (2020): 3431-3438" ) )
+
+citEntry(entry="article",
+         title = "Complete deconvolution of DNA methylation signals from complex tissues: a geometric approach",
+         author = personList( as.person("Weiwei Zhang"),
+                              as.person("Hao Wu"),
+                              as.person("Ziyi Li")),
+         year = 2020,
+         journal = "Bioinformatics",
+         volume={37},
+         number={8},
+         pages={1052-1059},
+         year={2020},
+         textVersion =
+         paste("Weiwei Zhang, Hao Wu, Ziyi Li (2020):",
+               "Complete deconvolution of DNA methylation signals from complex tissues: a geometric approach. ",
+                "Bioinformatics" ) )
 
