@@ -1,10 +1,10 @@
 import( stats )
 import( methods )
 import( SummarizedExperiment )
-import( RefFreeEWAS )
 import( EpiDISH )
 import( limma )
 import( nnls )
+import( quadprog )
 import( corpcor )
 export(
     Tsisal,
@@ -17,5 +17,8 @@ export(
     makeDesign,
     ChooseMarker,
     GetPrior,
-    MDeconv
+    MDeconv,
+    myRefFreeCellMixInitialize,
+    myRefFreeCellMix,
+    myprojectMix
 )

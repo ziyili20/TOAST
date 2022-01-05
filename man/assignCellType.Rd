@@ -30,7 +30,7 @@ Ziyi Li, Zhijin Wu, Peng Jin, Hao Wu.
 complex tissues."
 }
 \author{
-Ziyi Li <ziyi.li@emory.edu>
+Ziyi Li <zli16@mdanderson.org>
 }
 \examples{
 
