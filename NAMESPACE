@@ -6,6 +6,12 @@ import( limma )
 import( nnls )
 import( quadprog )
 import( corpcor )
+import( ggplot2 )
+import( doParallel )
+import( GGally )
+import( tidyr )
+import( parallel)
+importFrom("grDevices", "adjustcolor")
 export(
     Tsisal,
     assignCellType,
@@ -20,5 +26,7 @@ export(
     MDeconv,
     myRefFreeCellMixInitialize,
     myRefFreeCellMix,
-    myprojectMix
+    myprojectMix,
+    cedar,
+    plotCorr
 )
