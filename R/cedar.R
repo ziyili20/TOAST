@@ -134,7 +134,11 @@ cedar <- function(Y_raw,  # bulk observed data row:feature, col:sample
   ### in case log10 transformation can not work correctly
   for(cell.ix in 1:cell.num){
     min.tmp <- min(pval[pval[,cell.ix]>0 ,cell.ix])
-    pval[ pval[,cell.ix]==0, cell.ix] <- min.tmp*0.001
+    if(-log10(min.tmp) > 300 ){
+      pval[ pval[,cell.ix]==0, cell.ix] <- min.tmp
+    }else{
+      pval[ pval[,cell.ix]==0, cell.ix] <- min.tmp*0.001
+    }
   }
 
 
