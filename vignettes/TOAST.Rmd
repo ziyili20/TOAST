@@ -730,6 +730,56 @@ lapply(res_table, head, 3)
 res_table <- csTest(fitted_model, coef = "disease")
 ```
 
+### Testing one parameter in all cell types by incorporating DE/DM state correlation among cell types
+Some cell types may show DE/DM state correlation. We can check the existence of such correlation by 
+plotting the -log10 transformed p-value from TOAST result.
+```{r, eval = T, fig.align='default', fig.height=9,fig.width=11}
+res_table <- csTest(fitted_model, coef = "disease",verbose = F)
+pval.all <- matrix(NA, ncol= 6, nrow= nrow(Y_raw))
+feature.name <- rownames(Y_raw)
+rownames(pval.all) = feature.name
+colnames(pval.all) = names(res_table)[1:6]
+for(cell.ix in 1:6){
+  pval.all[,cell.ix] <- res_table[[cell.ix]][feature.name,'p_value']
+}
+plotCorr(pval = pval.all, pval.thres = 0.05)
+```
+Due to we only randomly included 3,000 features as example, the correlation 
+between cell types may not represent truth. In above figure, we can see the 
+Pearson correlation (Corr) between transformed p-values are statistically significant 
+between CD8T and CD4T, between Bcell and Mono, and between Gran and Mono. In
+addition odds ratio (OR) of DM state between cell types confirm the result 
+(e.g., OR = 2.9 for CD8T and CD4T).
+
+In this way we could incorporate such correlation into csDE/csDM detection to 
+improve the power, especially in cell types with low abundance. 
+```{r}
+res_cedar <- cedar(Y_raw = Y_raw, prop = Prop, design.1 = design,
+                   factor.to.test = 'disease',cutoff.tree = c('pval',0.01),
+                   cutoff.prior.prob = c('pval',0.01))
+```
+We can have posterior probability of DE for each feature in each cell type:
+```{r}
+head(res_cedar$tree_res$full$pp)
+```
+
+The correlation between cell types was captured by a hierarchical tree estimated
+from p-values of TOAST result:
+```{r}
+res_cedar$tree_res$full$tree_structure
+```
+As can be seen from above result, CD8T and CD4T are clustered together, while 
+Bcell and Mono are clustered together. Cell types with smaller distance means they 
+are stronger correlated. Different tree structures could be customized. Another 
+simpler tree structure is also used for inference:
+```{r}
+res_cedar$tree_res$single$tree_structure
+```
+The above tree structure simply assumes that correlation between cell types is 
+captured by the root node. When sample size is small or technical noise is large,
+this tree structure is recommended. In default, the function ouput the results 
+from both tree structures.
+
 ## Detect cell type-specific differential signals from a general experimental design
 
 1. Assuming you have TOAST library and dataset loaded,
