@@ -91,7 +91,7 @@ cedar <- function(Y_raw,  # bulk observed data row:feature, col:sample
   }else if( is.null(pval) & !is.null(p.adj) ){
     stop( 'p-value is needed')
   }
-  
+
   ### determine DE state for tree estimation if not provided
   de.res <- matrix(NA,ncol=cell.num, nrow=gene.num)
   if(is.null(de.state)){
