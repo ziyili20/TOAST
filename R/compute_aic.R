@@ -5,7 +5,7 @@ compute_aic <- function(estProp,Y.raw){
      Nsample = dim(Y.raw)[2]
      idx = apply(estProp,2,function(x) sum(x) == 0)
      estProp[,idx] = matrix(runif(Nsample*sum(idx),0.0001,0.0002),Nsample,sum(idx))
-     estProf <- t(csSAM::csfit(estProp, t(Y.raw))$ghat)
+     estProf <- t(mycsfit(estProp, t(Y.raw))$ghat)
      tmpmat <- estProf %*% t(estProp)
      rss = norm(Y.raw-tmpmat,type = "F")^2
      nSample = ncol(Y.raw) * nrow(Y.raw)

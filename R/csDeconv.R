@@ -49,7 +49,7 @@ csDeconv <- function(Y_raw,
     Prop0 <- FUN(Y, K)
     allProp[[1]] <- Prop0
 
-    out_all <- csSAM::csfit(Prop0, t(Y_raw))
+    out_all <- mycsfit(Prop0, t(Y_raw))
     prof <- t(out_all$ghat)
     tmpmat <- prof %*% t(Prop0)
     allRMSE[1] <- sqrt(mean((t(Y_raw) - t(tmpmat)) ^ 2))
@@ -66,7 +66,7 @@ csDeconv <- function(Y_raw,
         Prop0 <- FUN(Y, K)
         allProp[[i + 1]] <- Prop0
 
-        out_all <- csSAM::csfit(Prop0, t(Y_raw))
+        out_all <- mycsfit(Prop0, t(Y_raw))
         prof <- t(out_all$ghat)
         tmpmat <- prof %*% t(Prop0)
         allRMSE[i + 1] <- sqrt(mean((t(Y_raw) - t(tmpmat)) ^ 2))
