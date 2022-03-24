@@ -24,7 +24,7 @@ Tsisal <- function(Y_raw, K = NULL, knowRef = NULL,
 
      ## cell type label assignment
      if(!is.null(knowRef)){
-          out_all <- csSAM::csfit(estProp, t(Y_raw))
+          out_all <- mycsfit(estProp, t(Y_raw))
           prof <- t(out_all$ghat)
           rownames(prof) <- rownames(Y_raw)
           selProf <- prof[unlist(selMarker),]
