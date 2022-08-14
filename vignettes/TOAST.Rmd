@@ -777,8 +777,12 @@ res_cedar$tree_res$single$tree_structure
 ```
 The above tree structure simply assumes that correlation between cell types is 
 captured by the root node. When sample size is small or technical noise is large,
-this tree structure is recommended. In default, the function ouput the results 
+this tree structure is recommended. In default, the function outputs the results 
 from both tree structures.
+
+Function cedar() also allows adjusting covariates, using custom similarity calculation
+function for tree estimation, and using custom tree structure as input. Please check
+the example in cedar() function manual.
 
 ## Detect cell type-specific differential signals from a general experimental design
 
